@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101b2b" />
+  <meta name="description" content="Explore Philippine history through 3D locations, historical figures, quests, collectible artifacts, and quizzes in Echoes of the Past." />
+  <title>Echoes of the Past | A 3D Philippine History Adventure</title>
+  <style>
+    :root {
+      --navy: #101b2b;
+      --navy-soft: #17263b;
+      --navy-light: #20344b;
+      --gold: #e7b45b;
+      --gold-bright: #f5cc7e;
+      --cream: #f8f3e8;
+      --paper: #fffdf8;
+      --ink: #1e2b3c;
+      --muted: #66758a;
+      --line: rgba(255,255,255,.14);
+      --radius: 22px;
+      --shadow: 0 22px 60px rgba(10,20,35,.16);
+      --max: 1160px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 86px; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .container { width: min(var(--max), calc(100% - 40px)); margin-inline: auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(16,27,43,.94); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .nav { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; color: white; font-weight: 800; letter-spacing: -.035em; }
+    .brand-mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 14px; color: var(--navy); background: var(--gold); font-size: 22px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.4); }
+    .brand-name { line-height: 1.12; font-size: 15px; }
+    .brand-name small { display: block; margin-top: 5px; color: #b8c4d2; font-size: 10px; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 26px; color: #d4dce6; font-size: 13px; font-weight: 650; }
+    .nav-links a:hover { color: var(--gold-bright); }
+    .nav-cta { padding: 11px 17px; color: var(--navy) !important; background: var(--gold); border-radius: 999px; font-weight: 800; }
+    .menu-toggle { display: none; border: 1px solid var(--line); color: white; background: transparent; border-radius: 12px; padding: 9px 12px; font-size: 20px; }
+
+    .hero { position: relative; overflow: hidden; color: white; background: var(--navy); padding: 82px 0 86px; }
+    .hero::before { content: ""; position: absolute; inset: 0; opacity: .24; background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.2) 1px, transparent 0); background-size: 28px 28px; mask-image: linear-gradient(90deg, black, transparent 72%); }
+    .hero::after { content: ""; position: absolute; width: 560px; height: 560px; border-radius: 50%; border: 1px solid rgba(231,180,91,.13); right: -140px; top: -230px; box-shadow: 0 0 0 44px rgba(231,180,91,.025), 0 0 0 90px rgba(231,180,91,.025); }
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 52px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 7px 12px; border: 1px solid rgba(231,180,91,.35); border-radius: 999px; color: var(--gold-bright); font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; background: rgba(231,180,91,.08); }
+    .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 14px var(--gold); }
+    h1 { margin: 22px 0 20px; max-width: 680px; font-size: clamp(42px, 5.4vw, 72px); line-height: 1.03; letter-spacing: -.06em; }
+    h1 em { color: var(--gold); font-style: normal; }
+    .hero-copy { max-width: 570px; color: #c5d0de; font-size: 17px; line-height: 1.8; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 30px; }
+    .btn { display: inline-flex; justify-content: center; align-items: center; gap: 9px; min-height: 49px; padding: 13px 20px; border-radius: 999px; font-size: 14px; font-weight: 800; transition: transform .2s ease, background .2s ease; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--gold); color: var(--navy); box-shadow: 0 9px 28px rgba(231,180,91,.18); }
+    .btn-primary:hover { background: var(--gold-bright); }
+    .btn-ghost { border: 1px solid rgba(255,255,255,.23); color: white; }
+    .btn-ghost:hover { background: rgba(255,255,255,.07); }
+    .hero-facts { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 32px; color: #aebccd; font-size: 12px; }
+    .hero-facts span { display: inline-flex; align-items: center; gap: 7px; }
+    .hero-facts b { color: #fff; }
+    .hero-art { position: relative; min-height: 440px; display: grid; place-items: center; }
+    .glow { position: absolute; width: 320px; height: 320px; border-radius: 50%; background: rgba(231,180,91,.14); filter: blur(65px); }
+    .scene-card { position: relative; width: min(100%, 470px); aspect-ratio: .96; border: 1px solid rgba(255,255,255,.18); border-radius: 28px; overflow: hidden; background: linear-gradient(150deg, #29445a 0%, #42606b 45%, #b17f4c 100%); box-shadow: 0 32px 90px rgba(0,0,0,.35); transform: rotate(2deg); }
+    .scene-sun { position: absolute; top: 42px; right: 60px; width: 86px; height: 86px; border-radius: 50%; background: #f6d28d; box-shadow: 0 0 60px rgba(246,210,141,.32); }
+    .mountain { position: absolute; bottom: 145px; width: 0; height: 0; border-left: 190px solid transparent; border-right: 190px solid transparent; border-bottom: 245px solid #334f57; }
+    .mountain.one { left: -120px; bottom: 124px; border-left-width: 210px; border-right-width: 210px; border-bottom-color: #233e4b; }
+    .mountain.two { right: -150px; bottom: 110px; border-left-width: 230px; border-right-width: 230px; border-bottom-color: #58716b; }
+    .hill { position: absolute; height: 160px; border-radius: 50% 50% 0 0; bottom: -50px; width: 130%; left: -15%; background: #263f3e; transform: rotate(-7deg); }
+    .hill.two { height: 125px; bottom: -43px; left: 10%; background: #42604d; transform: rotate(8deg); }
+    .path { position: absolute; width: 150px; height: 205px; left: calc(50% - 75px); bottom: -22px; background: #d1a46c; clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); opacity: .9; }
+    .temple { position: absolute; left: 50%; bottom: 100px; transform: translateX(-50%); width: 150px; height: 108px; filter: drop-shadow(0 12px 8px rgba(0,0,0,.2)); }
+    .temple-roof { position: absolute; top: 0; left: -17px; width: 184px; height: 32px; background: #5f3329; clip-path: polygon(0 100%, 15% 25%, 50% 0, 85% 25%, 100% 100%); }
+    .temple-top { position: absolute; top: 27px; left: 9px; width: 132px; height: 13px; background: #e6c38a; }
+    .temple-wall { position: absolute; top: 40px; left: 16px; width: 118px; height: 66px; background: #d9c5a4; border: 4px solid #9c7b56; display: flex; justify-content: space-evenly; align-items: end; padding: 0 9px; }
+    .temple-wall i { display: block; width: 16px; height: 42px; background: #715743; border-radius: 8px 8px 0 0; }
+    .scene-label { position: absolute; left: 20px; bottom: 20px; right: 20px; padding: 15px 17px; border-radius: 16px; background: rgba(16,27,43,.82); border: 1px solid rgba(255,255,255,.16); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+    .scene-label small { display: block; font-size: 10px; color: #d7c9b0; text-transform: uppercase; letter-spacing: .13em; font-weight: 800; }
+    .scene-label strong { font-size: 17px; }
+    .scene-pin { width: 38px; height: 38px; display: grid; place-items: center; flex: 0 0 auto; color: var(--navy); background: var(--gold); border-radius: 12px; }
+    .floating-tag { position: absolute; z-index: 2; padding: 11px 14px; background: white; border-radius: 14px; color: var(--ink); box-shadow: var(--shadow); font-size: 12px; font-weight: 800; }
+    .floating-tag span { margin-right: 6px; }
+    .tag-quest { top: 42px; left: -10px; transform: rotate(-5deg); }
+    .tag-artifact { right: -15px; bottom: 93px; transform: rotate(4deg); }
+
+    .quick-strip { background: var(--gold); color: var(--navy); }
+    .quick-inner { min-height: 83px; display: grid; grid-template-columns: repeat(4,1fr); align-items: center; gap: 22px; }
+    .quick-item { display: flex; align-items: center; justify-content: center; gap: 11px; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; }
+    .quick-item span { font-size: 22px; }
+
+    section { padding: 88px 0; }
+    .section-heading { max-width: 700px; margin: 0 auto 42px; text-align: center; }
+    .kicker { color: #a7742d; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .18em; }
+    h2 { margin: 10px 0 13px; color: var(--navy); font-size: clamp(30px, 3.8vw, 46px); line-height: 1.13; letter-spacing: -.045em; }
+    .section-heading p { color: var(--muted); font-size: 16px; margin: 0; }
+    .features { background: var(--cream); }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .feature-card { padding: 26px; border: 1px solid #e8e0d2; border-radius: var(--radius); background: rgba(255,253,248,.85); transition: transform .22s ease, box-shadow .22s ease; }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+    .feature-icon { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 17px; border-radius: 16px; font-size: 25px; color: #81571e; background: #f4e3c3; }
+    .feature-card h3 { margin: 0 0 8px; color: var(--navy); font-size: 18px; letter-spacing: -.02em; }
+    .feature-card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .journey-grid { display: grid; grid-template-columns: .85fr 1.15fr; align-items: center; gap: 56px; }
+    .journey-copy h2 { max-width: 470px; }
+    .journey-copy p { color: var(--muted); }
+    .location-list { display: grid; gap: 12px; margin-top: 25px; }
+    .location-row { display: flex; align-items: center; gap: 13px; padding: 13px 15px; border-radius: 14px; background: var(--cream); border: 1px solid #eee5d6; }
+    .location-number { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: var(--navy); background: #f0d8a7; font-weight: 900; font-size: 12px; }
+    .location-row strong { display: block; font-size: 14px; color: var(--navy); }
+    .location-row small { display: block; color: var(--muted); font-size: 12px; }
+    .character-panel { position: relative; padding: 30px; border-radius: 28px; color: white; background: var(--navy); overflow: hidden; }
+    .character-panel::before { content: ""; position: absolute; width: 280px; height: 280px; border: 1px solid rgba(231,180,91,.18); border-radius: 50%; right: -80px; top: -120px; box-shadow: 0 0 0 36px rgba(231,180,91,.035), 0 0 0 72px rgba(231,180,91,.025); }
+    .character-panel h3 { position: relative; margin: 0 0 8px; font-size: 24px; letter-spacing: -.04em; }
+    .character-panel > p { position: relative; margin: 0 0 23px; color: #b9c6d4; font-size: 14px; }
+    .character-list { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .character { display: flex; gap: 11px; align-items: center; min-height: 72px; padding: 12px; border: 1px solid rgba(255,255,255,.11); border-radius: 15px; background: rgba(255,255,255,.055); }
+    .character:last-child { grid-column: 1 / -1; }
+    .character-portrait { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 auto; border-radius: 13px; color: var(--navy); background: var(--gold); font-size: 17px; font-weight: 900; }
+    .character strong { display: block; font-size: 13px; }
+    .character small { display: block; color: #b3c0ce; font-size: 11px; }
+
+    .how { background: var(--cream); }
+    .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 17px; counter-reset: step; }
+    .step { position: relative; padding: 26px 22px; border-radius: 20px; border: 1px solid #e8e0d2; background: var(--paper); }
+    .step::before { counter-increment: step; content: "0" counter(step); display: inline-grid; place-items: center; width: 39px; height: 39px; margin-bottom: 17px; border-radius: 12px; color: var(--navy); background: var(--gold); font-size: 13px; font-weight: 900; }
+    .step h3 { margin: 0 0 8px; font-size: 17px; color: var(--navy); }
+    .step p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .learning-band { padding: 0 0 88px; background: var(--cream); }
+    .learning-card { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 40px; padding: 42px; color: white; background: linear-gradient(135deg, #192b40, #253c50); border-radius: 28px; overflow: hidden; }
+    .learning-card h2 { color: white; }
+    .learning-card p { color: #c2ccd8; }
+    .learning-card .kicker { color: var(--gold-bright); }
+    .learning-points { display: grid; gap: 12px; }
+    .learning-point { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; background: rgba(255,255,255,.045); font-size: 13px; font-weight: 700; }
+    .check { display: grid; place-items: center; flex: 0 0 auto; width: 26px; height: 26px; color: var(--navy); background: var(--gold); border-radius: 8px; font-weight: 950; }
+
+    .spec-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 15px; }
+    .spec { padding: 22px; border: 1px solid #e9e3d8; border-radius: 18px; background: white; }
+    .spec span { display: block; margin-bottom: 9px; color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .12em; }
+    .spec strong { color: var(--navy); font-size: 17px; }
+    .note { margin-top: 20px; color: var(--muted); font-size: 12px; }
+
+    .faq { background: var(--cream); }
+    .faq-list { width: min(820px, 100%); margin: auto; display: grid; gap: 12px; }
+    details { padding: 18px 20px; background: var(--paper); border: 1px solid #e8e0d2; border-radius: 15px; }
+    summary { cursor: pointer; color: var(--navy); font-weight: 800; font-size: 14px; }
+    details p { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+
+    .final-cta { padding: 76px 0; color: white; background: var(--navy); text-align: center; }
+    .final-cta h2 { color: white; }
+    .final-cta p { max-width: 640px; margin: 0 auto 25px; color: #bfccda; }
+    .availability { display: inline-block; margin-top: 12px; padding: 6px 10px; border-radius: 8px; color: #f2d69e; background: rgba(231,180,91,.1); font-size: 11px; font-weight: 800; letter-spacing: .05em; }
+    footer { padding: 29px 0; color: #b8c3d0; background: #0b1421; font-size: 12px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .footer-inner strong { color: white; }
+    .footer-links { display: flex; gap: 18px; }
+    .footer-links a:hover { color: var(--gold); }
+
+    @media (max-width: 900px) {
+      .hero-grid, .journey-grid, .learning-card { grid-template-columns: 1fr; }
+      .hero { padding-top: 62px; }
+      .hero-art { min-height: 400px; }
+      .scene-card { max-width: 420px; }
+      .feature-grid { grid-template-columns: repeat(2,1fr); }
+      .steps { grid-template-columns: repeat(2,1fr); }
+      .journey-grid { gap: 35px; }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(var(--max), calc(100% - 28px)); }
+      .nav { min-height: 68px; }
+      .menu-toggle { display: inline-block; }
+      .nav-links { display: none; position: absolute; top: 68px; left: 0; right: 0; padding: 18px 22px 22px; flex-direction: column; align-items: stretch; gap: 15px; background: var(--navy); border-bottom: 1px solid var(--line); }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 7px 0; }
+      .nav-cta { text-align: center; padding: 12px 16px !important; }
+      .hero { padding: 48px 0 58px; }
+      h1 { font-size: clamp(40px, 12vw, 58px); }
+      .hero-copy { font-size: 15px; }
+      .hero-art { min-height: 330px; }
+      .scene-card { width: 90%; }
+      .scene-sun { width: 58px; height: 58px; right: 35px; top: 30px; }
+      .mountain { bottom: 105px; transform: scale(.8); }
+      .temple { transform: translateX(-50%) scale(.8); bottom: 72px; }
+      .tag-quest { left: -2px; top: 20px; }
+      .tag-artifact { right: -3px; bottom: 65px; }
+      .quick-inner { grid-template-columns: repeat(2,1fr); padding: 15px 0; gap: 12px; }
+      .quick-item { justify-content: flex-start; font-size: 10px; }
+      section { padding: 64px 0; }
+      .section-heading { margin-bottom: 30px; }
+      .feature-grid, .steps, .spec-grid { grid-template-columns: 1fr; }
+      .character-panel { padding: 22px; }
+      .character-list { grid-template-columns: 1fr; }
+      .character:last-child { grid-column: auto; }
+      .learning-card { padding: 26px 21px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-links { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="Echoes of the Past home">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span class="brand-name">ECHOES OF THE PAST<small>Philippine History Adventure</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#journey">Your Journey</a>
+        <a href="#how-to-play">How to Play</a>
+        <a href="#about-game">About the Game</a>
+        <a class="nav-cta" href="#get-game">Explore the Game ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">A mobile learning adventure</span>
+          <h1>History isn't just read.<br /><em>It's explored.</em></h1>
+          <p class="hero-copy">Step into a 3D journey through Philippine history. Meet notable historical figures, explore historically inspired places, complete quests, discover artifacts, and test what you've learned along the way.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#features">Discover the Features <span aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost" href="#journey">Meet the Historical Figures</a>
+          </div>
+          <div class="hero-facts">
+            <span>▣ <b>Mobile game</b></span>
+            <span>◉ <b>English & Filipino</b></span>
+            <span>✦ <b>Designed for ages 7+</b></span>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="Illustration of a historical landscape">
+          <div class="glow"></div>
+          <div class="floating-tag tag-quest"><span>📍</span> Quest location discovered</div>
+          <div class="scene-card" role="img" aria-label="Stylized illustration of a Philippine historical landscape">
+            <div class="scene-sun"></div>
+            <div class="mountain one"></div>
+            <div class="mountain"></div>
+            <div class="mountain two"></div>
+            <div class="hill"></div>
+            <div class="hill two"></div>
+            <div class="path"></div>
+            <div class="temple">
+              <div class="temple-roof"></div><div class="temple-top"></div>
+              <div class="temple-wall"><i></i><i></i><i></i></div>
+            </div>
+            <div class="scene-label">
+              <div><small>Your next destination</small><strong>Explore the past</strong></div>
+              <span class="scene-pin" aria-hidden="true">⌖</span>
+            </div>
+          </div>
+          <div class="floating-tag tag-artifact"><span>✧</span> Artifact discovered</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="quick-strip" aria-label="Game highlights">
+      <div class="container quick-inner">
+        <div class="quick-item"><span>🧭</span> 3D Exploration</div>
+        <div class="quick-item"><span>📜</span> Historical Quests</div>
+        <div class="quick-item"><span>🏺</span> Artifact Collection</div>
+        <div class="quick-item"><span>🧠</span> History Quizzes</div>
+      </div>
+    </div>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Learn by doing</span>
+          <h2>Every discovery has a story.</h2>
+          <p>Echoes of the Past combines exploration and interactive tasks to make selected topics in Philippine history more engaging.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon">🗺️</div>
+            <h3>Explore 3D Environments</h3>
+            <p>Move through selected, historically inspired Philippine locations and use the minimap and expanded map to find objectives.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3>Meet Historical Figures</h3>
+            <p>Interact with historical characters and learn about their lives, contributions, and place in Philippine history through dialogue.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">🧭</div>
+            <h3>Complete Questlines</h3>
+            <p>Learn through biography activities, historical site visits, and artifact-finding objectives tracked in the Quest Log.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">🏺</div>
+            <h3>Build an Artifact Collection</h3>
+            <p>Discover bonus collectibles while exploring and view each collected item's name, associated owner, and historical information.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">🎓</div>
+            <h3>Test Your Knowledge</h3>
+            <p>Answer randomized multiple-choice history quizzes after completing a historical figure's questline. Retry when needed.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Track Learning Progress</h3>
+            <p>Review completed quests and quizzes, check results, and see a completion summary of your journey through the game.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="journey">
+      <div class="container journey-grid">
+        <div class="journey-copy">
+          <span class="kicker">Five historical figures</span>
+          <h2>Travel across places shaped by history.</h2>
+          <p>Follow a guided journey through selected Philippine settings, with quests that introduce historical figures and connect players with events, places, and objects from the past.</p>
+          <div class="location-list">
+            <div class="location-row"><span class="location-number">01</span><div><strong>Calamba, Laguna</strong><small>Begin your journey with José Rizal</small></div></div>
+            <div class="location-row"><span class="location-number">02</span><div><strong>Tondo, Manila</strong><small>Continue with Andrés Bonifacio</small></div></div>
+            <div class="location-row"><span class="location-number">03</span><div><strong>Binondo, Manila</strong><small>Discover the story of Antonio Luna</small></div></div>
+            <div class="location-row"><span class="location-number">04</span><div><strong>Kawit, Cavite</strong><small>Explore Emilio Aguinaldo's era</small></div></div>
+            <div class="location-row"><span class="location-number">05</span><div><strong>Mactan, Cebu</strong><small>Learn about Lapu-Lapu and Mactan</small></div></div>
+          </div>
+        </div>
+        <div class="character-panel">
+          <h3>Get to know the figures</h3>
+          <p>Each historical figure introduces learning activities and a questline connected to their life and historical context.</p>
+          <div class="character-list">
+            <div class="character"><span class="character-portrait">JR</span><div><strong>José Rizal</strong><small>Writer, physician, and reformist</small></div></div>
+            <div class="character"><span class="character-portrait">AB</span><div><strong>Andrés Bonifacio</strong><small>Katipunan leader</small></div></div>
+            <div class="character"><span class="character-portrait">AL</span><div><strong>Antonio Luna</strong><small>Military leader and patriot</small></div></div>
+            <div class="character"><span class="character-portrait">EA</span><div><strong>Emilio Aguinaldo</strong><small>Revolutionary leader and first president</small></div></div>
+            <div class="character"><span class="character-portrait">LL</span><div><strong>Lapu-Lapu</strong><small>Leader associated with the Battle of Mactan</small></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how" id="how-to-play">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Start your adventure</span>
+          <h2>How to play</h2>
+          <p>Follow the clues, complete objectives, and use what you learn to answer the quizzes.</p>
+        </div>
+        <div class="steps">
+          <article class="step"><h3>Explore</h3><p>Use the on-screen joystick, camera controls, minimap, and quest markers to navigate the environment.</p></article>
+          <article class="step"><h3>Talk & Accept</h3><p>Approach a historical figure with an interaction indicator, read the dialogue, and accept available quests.</p></article>
+          <article class="step"><h3>Discover</h3><p>Visit designated locations, interact with required objects, and collect separate bonus artifacts along the way.</p></article>
+          <article class="step"><h3>Learn & Review</h3><p>Complete the objectives, take the history quiz, and check your quest and quiz progress.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <div class="learning-band" id="about-game">
+      <div class="container">
+        <div class="learning-card">
+          <div>
+            <span class="kicker">A supplementary learning experience</span>
+            <h2>Play with curiosity. Learn from the past.</h2>
+            <p>Echoes of the Past is designed to complement traditional learning materials—not replace them—by giving players an interactive way to explore selected topics in Philippine history.</p>
+            <a class="btn btn-primary" href="#get-game">Learn about availability <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="learning-points">
+            <div class="learning-point"><span class="check">✓</span> Biography, historical visit, and artifact quests</div>
+            <div class="learning-point"><span class="check">✓</span> Randomized 10-question multiple-choice quizzes</div>
+            <div class="learning-point"><span class="check">✓</span> English and Filipino language options</div>
+            <div class="learning-point"><span class="check">✓</span> Local progress saving and learning summaries</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section id="requirements">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Before you play</span>
+          <h2>Designed for mobile devices</h2>
+          <p>Check the project's stated platform requirements before installing the game.</p>
+        </div>
+        <div class="spec-grid">
+          <div class="spec"><span>Platform</span><strong>Mobile devices</strong></div>
+          <div class="spec"><span>Android requirement</span><strong>Android 11 or later</strong></div>
+          <div class="spec"><span>iOS requirement</span><strong>iOS 14 or later</strong></div>
+          <div class="spec"><span>Language options</span><strong>English and Filipino</strong></div>
+          <div class="spec"><span>Progress storage</span><strong>Local save</strong></div>
+          <div class="spec"><span>Learning audience</span><strong>Ages 7 and above</strong></div>
+        </div>
+        <p class="note">Historical places and artifacts shown in the game are digital representations for educational and gameplay purposes. They are not exact reproductions of all historical sites, and collectible objects are not the original historical items. Final device compatibility should be confirmed through testing.</p>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Good to know</span>
+          <h2>Frequently asked questions</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>What is Echoes of the Past?</summary>
+            <p>It is a 3D quest-based mobile educational game that introduces selected topics in Philippine history through exploration, dialogue, quests, artifact collection, and quizzes.</p>
+          </details>
+          <details>
+            <summary>Who is the game for?</summary>
+            <p>The project is intended for students, young learners, and others interested in Philippine history, with a target audience of ages seven and above.</p>
+          </details>
+          <details>
+            <summary>Can I change the language?</summary>
+            <p>Yes. The game includes English and Filipino language settings.</p>
+          </details>
+          <details>
+            <summary>Does the game replace classroom learning?</summary>
+            <p>No. It is intended as a supplementary learning resource alongside traditional educational materials.</p>
+          </details>
+          <details>
+            <summary>Where can I download it?</summary>
+            <p>Download availability has not been added to this page yet. An official distribution or app-store link can be added here once it is available.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" id="get-game">
+      <div class="container">
+        <span class="eyebrow">Your history adventure awaits</span>
+        <h2>Ready to explore the past?</h2>
+        <p>Discover historical stories through quests, places, and artifacts in Echoes of the Past.</p>
+        <a class="btn btn-primary" href="mailto:YOUR-SUPPORT-EMAIL@example.com?subject=Echoes%20of%20the%20Past%20Game%20Inquiry">Contact the Project Team <span aria-hidden="true">↗</span></a>
+        <div><span class="availability">Official download link to be added</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div><strong>Echoes of the Past</strong><br />A 3D Quest-Based Philippine History Game</div>
+      <div class="footer-links"><a href="#features">Features</a><a href="#requirements">Requirements</a><a href="#faq">FAQ</a><a href="#home">Back to top ↑</a></div>
+      <div>© <span id="year"></span> Project Team</div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+      menuToggle.textContent = isOpen ? '×' : '☰';
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Open navigation menu');
+        menuToggle.textContent = '☰';
+      });
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
